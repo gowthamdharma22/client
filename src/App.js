@@ -1,25 +1,42 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import React from "react";
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  Navigate,
+} from "react-router-dom";
+import { Toaster, toast } from "react-hot-toast";
+import Chat from "./Pages/Chats/Chat";
+import Auth from "./Pages/Auth/Auth";
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Router>
+        <Toaster position="top-center" reverseOrder={false} />
+        <Routes>
+          <Route path="/" element={<Auth />} />
+          <Route path="/home" element={<Check />} />
+        </Routes>
+      </Router>
     </div>
   );
 }
 
 export default App;
+
+function Check() {
+  const userID = window.localStorage.getItem("userID");
+  React.useEffect(() => {
+    if (!userID) {
+      toast.error("Login or Signup first", {
+        style: {
+          fontSize: "15px",
+        },
+      });
+    }
+  }, [userID]);
+
+  return userID ? <Chat /> : <Navigate to="/" />;
+}
